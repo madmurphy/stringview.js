@@ -1,0 +1,19 @@
+{
+  "name": "stringview.js",
+  "version": "1.0.0",
+  "description": "C-like string interface for JavaScript",
+  "main": "stringview.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madmurphy/stringview.js.git"
+  },
+  "author": "madmurphy",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/madmurphy/stringview.js/issues"
+  },
+  "homepage": "https://developer.mozilla.org/en-US/Add-ons/Code_snippets/StringView"
+}

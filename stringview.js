@@ -20,7 +20,7 @@ if (!Number.isInteger) {
 |*|
 |*|	Revision #9, October 30, 2016
 |*|
-|*|	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/StringView
+|*|	https://developer.mozilla.org/en-US/Add-ons/Code_snippets/StringView
 |*|	https://developer.mozilla.org/en-US/docs/User:fusionchess
 |*|	https://github.com/madmurphy/stringview.js
 |*|
