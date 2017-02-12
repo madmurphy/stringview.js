@@ -18,7 +18,7 @@ if (!Number.isInteger) {
 |*|
 |*|	StringView - Mozilla Developer Network
 |*|
-|*|	Revision #9, October 30, 2016
+|*|	Revision #10, February 12th, 2017
 |*|
 |*|	https://developer.mozilla.org/en-US/Add-ons/Code_snippets/StringView
 |*|	https://developer.mozilla.org/en-US/docs/User:fusionchess
@@ -583,25 +583,25 @@ StringView.prototype.subview = function (nCharOffset /* optional */, nCharLength
 
 	var
 
-		nChrLen, nCharStart, nStrLen, bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16",
-		nStartOffset = nCharOffset, nStringLength, nRawLen = this.rawData.length;
+		nChrLen, nStartOffset, nSubOffset, nSubLength, bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16",
+		nThisLength, nRawLen = this.rawData.length;
 
 	if (nRawLen === 0) {
 		return new StringView(this.buffer, this.encoding);
 	}
 
-	nStringLength = bVariableLen ? this.makeIndex() : nRawLen;
-	nCharStart = nCharOffset ? Math.max((nStringLength + nCharOffset) % nStringLength, 0) : 0;
-	nStrLen = Number.isInteger(nCharLength) ? Math.max(nCharLength, 0) + nCharStart > nStringLength ? nStringLength - nCharStart : nCharLength : nStringLength;
+	nThisLength = bVariableLen ? this.makeIndex() : nRawLen;
+	nSubOffset = nCharOffset ? nCharOffset + 1 > nThisLength ? nThisLength : Math.max((nThisLength + nCharOffset) % nThisLength, 0) : 0;
+	nSubLength = Number.isInteger(nCharLength) ? Math.max(nCharLength, 0) + nSubOffset > nThisLength ? nThisLength - nSubOffset : nCharLength : nThisLength - nSubOffset;
 
-	if (nCharStart === 0 && nStrLen === nStringLength) { return this; }
+	if (nSubOffset === 0 && nSubLength === nThisLength) { return this; }
 
 	if (bVariableLen) {
-		nStartOffset = this.makeIndex(nCharStart);
-		nChrLen = this.makeIndex(nStrLen, nStartOffset) - nStartOffset;
+		nStartOffset = nSubOffset < nThisLength ? this.makeIndex(nSubOffset) : nThisLength;
+		nChrLen = nSubLength ? this.makeIndex(nSubLength, nStartOffset) - nStartOffset : 0;
 	} else {
-		nStartOffset = nCharStart;
-		nChrLen = nStrLen - nCharStart;
+		nStartOffset = nSubOffset;
+		nChrLen = nSubLength;
 	}
 
 	if (this.encoding === "UTF-16") {
@@ -610,7 +610,7 @@ StringView.prototype.subview = function (nCharOffset /* optional */, nCharLength
 		nStartOffset <<= 2;
 	}
 
-	return new StringView(this.buffer, this.encoding, nStartOffset, nChrLen);
+	return new StringView(this.buffer, this.encoding, this.rawData.byteOffset + nStartOffset, nChrLen);
 
 };
 
