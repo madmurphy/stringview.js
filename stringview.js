@@ -583,34 +583,34 @@ StringView.prototype.subview = function (nCharOffset /* optional */, nCharLength
 
 	var
 
-		nChrLen, nStartOffset, nSubOffset, nSubLength, bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16",
-		nThisLength, nRawLen = this.rawData.length;
+		nRawSubLen, nRawSubOffset, nSubOffset, nSubLen, bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16",
+		nThisLen, nRawLen = this.rawData.length;
 
 	if (nRawLen === 0) {
 		return new StringView(this.buffer, this.encoding);
 	}
 
-	nThisLength = bVariableLen ? this.makeIndex() : nRawLen;
-	nSubOffset = nCharOffset ? nCharOffset + 1 > nThisLength ? nThisLength : Math.max((nThisLength + nCharOffset) % nThisLength, 0) : 0;
-	nSubLength = Number.isInteger(nCharLength) ? Math.max(nCharLength, 0) + nSubOffset > nThisLength ? nThisLength - nSubOffset : nCharLength : nThisLength - nSubOffset;
+	nThisLen = bVariableLen ? this.makeIndex() : nRawLen;
+	nSubOffset = nCharOffset ? nCharOffset + 1 > nThisLen ? nThisLen : Math.max((nThisLen + nCharOffset) % nThisLen, 0) : 0;
+	nSubLen = Number.isInteger(nCharLength) ? Math.max(nCharLength, 0) + nSubOffset > nThisLen ? nThisLen - nSubOffset : nCharLength : nThisLen - nSubOffset;
 
-	if (nSubOffset === 0 && nSubLength === nThisLength) { return this; }
+	if (nSubOffset === 0 && nSubLen === nThisLen) { return this; }
 
 	if (bVariableLen) {
-		nStartOffset = nSubOffset < nThisLength ? this.makeIndex(nSubOffset) : nThisLength;
-		nChrLen = nSubLength ? this.makeIndex(nSubLength, nStartOffset) - nStartOffset : 0;
+		nRawSubOffset = nSubOffset < nThisLen ? this.makeIndex(nSubOffset) : nThisLen;
+		nRawSubLen = nSubLen ? this.makeIndex(nSubLen, nRawSubOffset) - nRawSubOffset : 0;
 	} else {
-		nStartOffset = nSubOffset;
-		nChrLen = nSubLength;
+		nRawSubOffset = nSubOffset;
+		nRawSubLen = nSubLen;
 	}
 
 	if (this.encoding === "UTF-16") {
-		nStartOffset <<= 1;
+		nRawSubOffset <<= 1;
 	} else if (this.encoding === "UTF-32") {
-		nStartOffset <<= 2;
+		nRawSubOffset <<= 2;
 	}
 
-	return new StringView(this.buffer, this.encoding, this.rawData.byteOffset + nStartOffset, nChrLen);
+	return new StringView(this.buffer, this.encoding, this.rawData.byteOffset + nRawSubOffset, nRawSubLen);
 
 };
 
