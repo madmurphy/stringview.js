@@ -18,7 +18,7 @@ if (!Number.isInteger) {
 |*|
 |*|	StringView - Mozilla Developer Network
 |*|
-|*|	Revision #10, February 12th, 2017
+|*|	Revision #11, March 1st, 2017
 |*|
 |*|	https://developer.mozilla.org/en-US/Add-ons/Code_snippets/StringView
 |*|	https://developer.mozilla.org/en-US/docs/User:fusionchess
