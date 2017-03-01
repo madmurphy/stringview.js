@@ -635,7 +635,11 @@ StringView.prototype.forEachChar = function (fCallback, oThat, nChrOffset, nChrL
 
 		for (var nChrCode, nChrIdx = 0; nRawIdx < nRawEnd; nChrIdx++) {
 			nChrCode = fGetInptChrCode(aSource, nRawIdx);
-			fCallback.call(oThat || null, nChrCode, nChrIdx, nRawIdx, aSource);
+			if (!oThat) {
+				fCallback(nChrCode, nChrIdx, nRawIdx, aSource);
+			} else {
+				fCallback.call(oThat, nChrCode, nChrIdx, nRawIdx, aSource);
+			}
 			nRawIdx += fGetInptChrSize(nChrCode);
 		}
 
@@ -645,7 +649,11 @@ StringView.prototype.forEachChar = function (fCallback, oThat, nChrOffset, nChrL
 		nRawEnd = isFinite(nChrLen) ? nChrLen + nRawIdx : aSource.length;
 
 		for (nRawIdx; nRawIdx < nRawEnd; nRawIdx++) {
-			fCallback.call(oThat || null, aSource[nRawIdx], nRawIdx, nRawIdx, aSource);
+			if (!oThat) {
+				fCallback(aSource[nRawIdx], nRawIdx, nRawIdx, aSource);
+			} else {
+				fCallback.call(oThat, aSource[nRawIdx], nRawIdx, nRawIdx, aSource);
+			}
 		}
 
 	}
