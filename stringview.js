@@ -319,9 +319,12 @@ function StringView (vInput, sEncoding /* optional (default: UTF-8) */, nOffset 
 /* CONSTRUCTOR'S METHODS */
 
 StringView.loadUTF8CharCode = function (aChars, nIdx) {
-
+	/* The ISO 10646 view of UTF-8 considers valid codepoints encoded by 1-6 bytes, 
+	 * while the Unicode view of UTF-8 in 2003 has limited them to 1-4 bytes in order to 
+	 * match UTF-16's codepoints. In front of a 5/6-byte sequence StringView tries to 
+	 * encode it in any case.
+	 */
 	var nLen = aChars.length, nPart = aChars[nIdx];
-
 	return nPart > 251 && nPart < 254 && nIdx + 5 < nLen ?
 			/* (nPart - 252 << 30) may be not safe in ECMAScript! So...: */
 			/* six bytes */ (nPart - 252) * 1073741824 + (aChars[nIdx + 1] - 128 << 24) + (aChars[nIdx + 2] - 128 << 18) + (aChars[nIdx + 3] - 128 << 12) + (aChars[nIdx + 4] - 128 << 6) + aChars[nIdx + 5] - 128
